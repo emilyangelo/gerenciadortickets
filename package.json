@@ -1,0 +1,18 @@
+{
+  "name": "gerenciadortickets",
+  "version": "1.0.0",
+  "description": "BluePoint — Sistema de Gerenciamento de Chamados (Help Desk)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "helpdesk",
+    "tickets",
+    "bluepoint",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC"
+}

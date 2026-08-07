@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BluePoint — Sistema Corporativo de Gerenciamento de Chamados e Help Desk">
+  <title>BluePoint — Portal de Chamados</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ========================================================================== -->
+  <!-- 1. TELA DE LOGIN                                                          -->
+  <!-- ========================================================================== -->
+  <div id="loginView" class="login-container">
+    <div class="login-card">
+      <div class="brand-header">
+        <div class="brand-logo">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.172l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </div>
+        <h1 class="brand-title">BluePoint</h1>
+        <p class="brand-subtitle">Portal Corporativo de Gerenciamento de Chamados</p>
+      </div>
+
+      <div id="loginAlert" class="alert-message alert-error"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="loginUsername">Nome de Usuário</label>
+          <input type="text" id="loginUsername" class="form-control" placeholder="Digite seu usuário" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Senha</label>
+          <input type="password" id="loginPassword" class="form-control" placeholder="Digite sua senha" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" id="loginBtn" class="btn btn-primary btn-block">
+          Entrar no Sistema
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================== -->
+  <!-- 2. INTERFACE PRINCIPAL DO APLICATIVO                                       -->
+  <!-- ========================================================================== -->
+  <div id="appView" class="app-wrapper">
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="navbar-container">
+        <a href="#" class="nav-brand" onclick="switchPage('tickets'); return false;">
+          <div class="nav-logo">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.172l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </div>
+          <span class="nav-title">BluePoint</span>
+        </a>
+
+        <nav class="nav-menu">
+          <a href="#" id="navTickets" class="nav-link active" onclick="switchPage('tickets'); return false;">
+            Painel de Chamados
+          </a>
+          <a href="#" id="navAdmin" class="nav-link" style="display: none;" onclick="switchPage('admin'); return false;">
+            Painel de Administradores
+          </a>
+        </nav>
+
+        <div class="user-profile">
+          <div class="user-info">
+            <div id="userNameDisplay" class="user-name">Usuário</div>
+            <div id="userRoleDisplay" class="user-role-badge role-user">Comum</div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="handleLogout()">
+            Sair
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+
+      <!-- ==================================================================== -->
+      <!-- PÁGINA 1 — PAINEL DE CHAMADOS                                        -->
+      <!-- ==================================================================== -->
+      <section id="pageTickets" class="page-section active">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Painel de Chamados</h2>
+            <p class="page-description">Gerencie, acompanhe e abra solicitações de suporte técnico</p>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="openNewTicketModal()">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Abrir Chamado
+          </button>
+        </div>
+
+        <!-- Barra de Ferramentas / Filtros -->
+        <div class="toolbar-card">
+          <div class="filter-group">
+            <input type="text" id="ticketSearch" class="form-control search-input" placeholder="Buscar por título ou n° da máquina..." oninput="filterTicketsTable()">
+            
+            <select id="ticketStatusFilter" class="form-control" style="max-width: 180px;" onchange="filterTicketsTable()">
+              <option value="">Todos os Status</option>
+              <option value="Aberto">Aberto</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Resolvido">Resolvido</option>
+              <option value="Fechado">Fechado</option>
+            </select>
+
+            <select id="ticketEquipmentFilter" class="form-control" style="max-width: 180px;" onchange="filterTicketsTable()">
+              <option value="">Todos os Equipamentos</option>
+              <option value="Notebook">Notebook</option>
+              <option value="Mouse">Mouse</option>
+              <option value="Cabo">Cabo</option>
+              <option value="Rede">Rede</option>
+              <option value="Drivers">Drivers</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tabela de Chamados -->
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Data/Hora</th>
+                  <th>Solicitante</th>
+                  <th>Título do Chamado</th>
+                  <th>Equipamento</th>
+                  <th>N° Máquina</th>
+                  <th>Tipo do Chamado</th>
+                  <th id="thAdminResponsavel" style="display: none;">Admin Responsável</th>
+                  <th>Status</th>
+                  <th>Alerta SLA</th>
+                  <th style="text-align: right;">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="ticketsTableBody">
+                <!-- Preenchido via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- PÁGINA 2 — PAINEL DE ADMINISTRADORES                                 -->
+      <!-- ==================================================================== -->
+      <section id="pageAdmin" class="page-section">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Painel de Administradores</h2>
+            <p class="page-description">Métricas operacionais, controle de carga de trabalho e gestão de usuários</p>
+          </div>
+        </div>
+
+        <!-- Métricas Rápidas -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <div>
+              <div id="statTotalTickets" class="stat-value">0</div>
+              <div class="stat-label">Total de Chamados</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #fef3c7; color: #b45309;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <div id="statOpenTickets" class="stat-value">0</div>
+              <div class="stat-label">Em Aberto / Andamento</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #fee2e2; color: #b91c1c;">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div>
+              <div id="statOverdueTickets" class="stat-value">0</div>
+              <div class="stat-label">Fora do Prazo (SLA)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Grid: Gráfico + Cadastro de Usuários -->
+        <div class="dashboard-grid">
+          <!-- Gráfico -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title">Chamados Abertos por Dia</h3>
+            </div>
+            <div id="dailyTicketsChart" class="chart-container">
+              <!-- Renderizado via JavaScript/SVG -->
+            </div>
+          </div>
+
+          <!-- Formulário Novo Usuário -->
+          <div class="chart-card">
+            <h3 class="chart-title" style="margin-bottom: 16px;">Cadastrar Novo Usuário</h3>
+            <div id="createUserAlert" class="alert-message"></div>
+            
+            <form id="createUserForm" onsubmit="handleCreateUser(event)">
+              <div class="form-group">
+                <label for="newUsername">Nome de Usuário (Login)</label>
+                <input type="text" id="newUsername" class="form-control" placeholder="ex: joao.silva" required>
+              </div>
+
+              <div class="form-group">
+                <label for="newFullName">Nome Completo</label>
+                <input type="text" id="newFullName" class="form-control" placeholder="ex: João da Silva" required>
+              </div>
+
+              <div class="form-group">
+                <label for="newUserPassword">Senha</label>
+                <input type="password" id="newUserPassword" class="form-control" placeholder="Senha de acesso" required>
+              </div>
+
+              <div class="form-group">
+                <label for="newUserRole">Nível de Acesso</label>
+                <select id="newUserRole" class="form-control" required>
+                  <option value="user">Usuário comum (Apenas abre chamados)</option>
+                  <option value="admin">Administrador (Gerencia e responde chamados)</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">
+                Cadastrar Usuário
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Tabela de Carga de Trabalho dos Admins -->
+        <div class="table-card">
+          <div class="modal-header" style="background-color: transparent;">
+            <h3 class="chart-title">Administradores e Chamados Responsáveis</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nome do Administrador</th>
+                  <th>Usuário</th>
+                  <th>Chamados Ativos Sob Responsabilidade</th>
+                  <th>Histórico Total Atribuído</th>
+                </tr>
+              </thead>
+              <tbody id="adminWorkloadTableBody">
+                <!-- Preenchido via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================== -->
+  <!-- 3. MODAIS                                                                  -->
+  <!-- ========================================================================== -->
+
+  <!-- MODAL: NOVO CHAMADO -->
+  <div id="modalNewTicket" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Abrir Novo Chamado</h3>
+        <button type="button" class="modal-close" onclick="closeModal('modalNewTicket')">&times;</button>
+      </div>
+
+      <div id="newTicketAlert" class="alert-message"></div>
+
+      <form id="newTicketForm" onsubmit="handleCreateTicket(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="newTicketTitle">Título da Solicitação</label>
+            <input type="text" id="newTicketTitle" class="form-control" placeholder="Descreva sucintamente o problema" required>
+          </div>
+
+          <div class="form-group">
+            <label for="newTicketEquipment">Tipo de Equipamento</label>
+            <select id="newTicketEquipment" class="form-control" required>
+              <option value="">Selecione o equipamento...</option>
+              <option value="Notebook">Notebook</option>
+              <option value="Mouse">Mouse</option>
+              <option value="Cabo">Cabo</option>
+              <option value="Rede">Rede</option>
+              <option value="Drivers">Drivers</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="newTicketMachineNumber">Número da Máquina (Patrimônio)</label>
+            <input type="text" id="newTicketMachineNumber" class="form-control" placeholder="ex: PAT-2026-8809 ou N° de Série" required>
+          </div>
+
+          <div class="form-group">
+            <label for="newTicketDescription">Descrição Detalhada</label>
+            <textarea id="newTicketDescription" class="form-control" placeholder="Descreva em detalhes o que está acontecendo..." required></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalNewTicket')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Chamado</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DETALHES & ATENDIMENTO DO CHAMADO -->
+  <div id="modalTicketDetails" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 720px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="detailTicketIdTitle" class="modal-title">Chamado #</h3>
+          <p id="detailTicketCreatedAt" style="font-size: 12px; color: var(--text-muted); margin-top: 2px;"></p>
+        </div>
+        <button type="button" class="modal-close" onclick="closeModal('modalTicketDetails')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="detailAlert" class="alert-message"></div>
+
+        <!-- Informações do Chamado -->
+        <div style="background-color: var(--blue-50); border: 1px solid var(--blue-100); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
+          <h4 id="detailTitle" style="font-size: 16px; font-weight: 700; color: var(--blue-900); margin-bottom: 8px;"></h4>
+          <p id="detailDescription" style="font-size: 13px; color: var(--text-primary); white-space: pre-wrap; margin-bottom: 12px;"></p>
+
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px;">
+            <div><strong>Solicitante:</strong> <span id="detailUserName"></span></div>
+            <div><strong>Equipamento:</strong> <span id="detailEquipment"></span></div>
+            <div><strong>N° Máquina:</strong> <span id="detailMachineNumber"></span></div>
+            <div><strong>Tipo do Chamado:</strong> <span id="detailTicketType"></span></div>
+            <div id="detailAdminContainer"><strong>Admin Responsável:</strong> <span id="detailAssignedAdmin"></span></div>
+          </div>
+        </div>
+
+        <!-- PAINEL DE CONTROLE DE ADMIN (Apenas para Admins) -->
+        <div id="adminActionSection" style="display: none; background: #ffffff; border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
+          <h4 style="font-size: 14px; font-weight: 700; color: var(--blue-900); margin-bottom: 12px;">Gestão do Atendimento (Apenas Admin)</h4>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 12px;">
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Classificação do Chamado</label>
+              <select id="detailTicketTypeSelect" class="form-control" style="margin-top: 4px;" onchange="handleUpdateTicketType()">
+                <option value="Help Desk">Help Desk</option>
+                <option value="ADM Serviço">ADM Serviço</option>
+                <option value="Backup">Backup</option>
+                <option value="Outros">Outros</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Atribuir Admin Responsável</label>
+              <select id="detailAssignAdminSelect" class="form-control" style="margin-top: 4px;" onchange="handleAssignAdmin()">
+                <!-- Preenchido via JS -->
+              </select>
+            </div>
+
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Status do Chamado</label>
+              <select id="detailStatusSelect" class="form-control" style="margin-top: 4px;">
+                <option value="Aberto">Aberto</option>
+                <option value="Em Andamento">Em Andamento</option>
+                <option value="Resolvido">Resolvido</option>
+                <option value="Fechado">Fechado</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIMELINE DE RESPOSTAS -->
+        <div class="response-timeline">
+          <h4 class="timeline-title">Histórico de Atualizações e Respostas</h4>
+          <div id="responsesTimelineList">
+            <!-- Preenchido via JS -->
+          </div>
+        </div>
+
+        <!-- FORMULÁRIO DE RESPOSTA (ADMIN) -->
+        <div id="replyFormSection" style="display: none; margin-top: 20px;">
+          <h4 style="font-size: 13px; font-weight: 700; color: var(--blue-900); margin-bottom: 8px;">Adicionar Resposta / Atualização</h4>
+          <textarea id="replyMessageText" class="form-control" placeholder="Escreva a resposta para o usuário..."></textarea>
+          <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+            <button type="button" class="btn btn-primary btn-sm" onclick="handleSendResponse()">
+              Enviar Resposta
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('modalTicketDetails')">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carregar scripts do frontend -->
+  <script src="js/chart.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

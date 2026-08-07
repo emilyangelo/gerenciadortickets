@@ -1,0 +1,66 @@
+[
+  {
+    "id": "tkt_1786059716617",
+    "userId": "usr_1786059557138",
+    "userName": "Bruno Santos Lima",
+    "title": "Notebook",
+    "description": "Notebook apresenta lentidão ao ligar",
+    "equipmentType": "Notebook",
+    "machineNumber": "DELL407",
+    "ticketType": "Help Desk",
+    "assignedAdminId": "usr_1786059798257",
+    "assignedAdminName": "Emily Angelo",
+    "status": "Em Andamento",
+    "createdAt": "2026-08-06T23:41:56.617Z",
+    "updatedAt": "2026-08-06T23:45:01.816Z",
+    "responses": [
+      {
+        "id": "rsp_1786059901816",
+        "authorId": "usr_root",
+        "authorName": "Administrador Root",
+        "message": "Entrei em contato via zoom",
+        "createdAt": "2026-08-06T23:45:01.816Z"
+      }
+    ]
+  },
+  {
+    "id": "tkt_1001",
+    "userId": "usr_root",
+    "userName": "Administrador Root",
+    "title": "Problema com lentidão na conexão da Rede local",
+    "description": "A máquina do setor financeiro apresenta alta latência nas rotas internas.",
+    "equipmentType": "Rede",
+    "machineNumber": "PAT-2026-9901",
+    "ticketType": "Help Desk",
+    "assignedAdminId": "usr_root",
+    "assignedAdminName": "Administrador Root",
+    "status": "Em Andamento",
+    "createdAt": "2026-08-06T14:30:00.000Z",
+    "updatedAt": "2026-08-06T15:00:00.000Z",
+    "responses": [
+      {
+        "id": "rsp_1",
+        "authorId": "usr_root",
+        "authorName": "Administrador Root",
+        "message": "Verificação do switch principal agendada.",
+        "createdAt": "2026-08-06T15:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "tkt_1002",
+    "userId": "usr_root",
+    "userName": "Administrador Root",
+    "title": "Substituição de mouse danificado",
+    "description": "Botão esquerdo com mau contato.",
+    "equipmentType": "Mouse",
+    "machineNumber": "PAT-2026-1044",
+    "ticketType": "Help Desk",
+    "assignedAdminId": "usr_root",
+    "assignedAdminName": "Administrador Root",
+    "status": "Aberto",
+    "createdAt": "2026-08-06T18:00:00.000Z",
+    "updatedAt": "2026-08-07T00:18:07.608Z",
+    "responses": []
+  }
+]

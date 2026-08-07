@@ -1,0 +1,26 @@
+[
+  {
+    "id": "usr_root",
+    "username": "root",
+    "passwordHash": "7246d250a68ef9cb95290b384904df21f63100d24cfa79ae86c0385e12c982cf0ba638776409db92869b6720b876911a288cea693b2407dccaeeefebb83a4774",
+    "name": "Administrador Root",
+    "role": "admin",
+    "createdAt": "2026-08-06T20:00:00.000Z"
+  },
+  {
+    "id": "usr_1786059557138",
+    "username": "bruno.lima",
+    "passwordHash": "7246d250a68ef9cb95290b384904df21f63100d24cfa79ae86c0385e12c982cf0ba638776409db92869b6720b876911a288cea693b2407dccaeeefebb83a4774",
+    "name": "Bruno Santos Lima",
+    "role": "user",
+    "createdAt": "2026-08-06T23:39:17.139Z"
+  },
+  {
+    "id": "usr_1786059798257",
+    "username": "emily.angelo",
+    "passwordHash": "7246d250a68ef9cb95290b384904df21f63100d24cfa79ae86c0385e12c982cf0ba638776409db92869b6720b876911a288cea693b2407dccaeeefebb83a4774",
+    "name": "Emily Angelo",
+    "role": "admin",
+    "createdAt": "2026-08-06T23:43:18.258Z"
+  }
+]
